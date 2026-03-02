@@ -16,7 +16,6 @@ async function searchCountry(countryName) {
 
         const [country] = await response.json();
 
-        
         countryInfo.innerHTML = `
             <h2>${country.name.common}</h2>
             <p><strong>Capital:</strong> ${country.capital ? country.capital[0] : 'N/A'}</p>
@@ -25,13 +24,13 @@ async function searchCountry(countryName) {
             <img src="${country.flags.svg}" alt="${country.name.common} flag" width="200">
         `;
 
-        
         if (country.borders && country.borders.length > 0) {
             const codes = country.borders.join(',');
-            const borderResponse = await fetch(`https://restcountries.com/v3.1/alpha?=${codes}`);
-        if (!borderResponse.ok) {
-            throw new Error('Failed to fetch bordering countries.');
-        }
+            // FIXED: Added 'codes=' to the URL
+            const borderResponse = await fetch(`https://restcountries.com{codes}`);
+            
+            if (!borderResponse.ok) throw new Error('Failed to fetch bordering countries.');
+            
             const neighbors = await borderResponse.json();
 
             borderGrid.innerHTML = '<h3>Bordering Countries:</h3>';
@@ -68,20 +67,3 @@ countryInput.addEventListener('keypress', (e) => {
         if (country) searchCountry(country);
     }
 });
-
-const [country] = await response.json(); 
-
-const commonName = country.name.common; 
-const flagUrl = country.flags.svg;
-
-if (country.borders) {
-    const codes = country.borders.join(',');
-    
-    const neighborResponse = await fetch(`https://restcountries.com{codes}`);
-    const neighbors = await neighborResponse.json();
-
-    neighbors.forEach(neighbor => {
-        console.log(`Neighbor: ${neighbor.name.common}`);
-    });
-}
-
