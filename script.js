@@ -27,7 +27,7 @@ async function searchCountry(countryName) {
         if (country.borders && country.borders.length > 0) {
             const codes = country.borders.join(',');
             // FIXED: Added 'codes=' to the URL
-            const borderResponse = await fetch(`https://restcountries.com{codes}`);
+            const borderResponse = await fetch(`https://restcountries.com/v3.1/alpha?codes=${codes}`);
             
             if (!borderResponse.ok) throw new Error('Failed to fetch bordering countries.');
             
